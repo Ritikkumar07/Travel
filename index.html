@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WanderSphere - Your Next Adventure Awaits</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .hero-section {
+            background-image: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        .testimonial-card {
+            width: 350px; /* Giving a fixed width for easier calculation */
+        }
+
+        /* Common slider styles */
+        .slider {
+            position: relative;
+            width: 100%;
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        /* Styles for manual drag-to-scroll slider */
+        .scrollable-slider {
+            overflow-x: scroll;
+            cursor: grab;
+            user-select: none; /* Prevents text selection during drag */
+            -webkit-overflow-scrolling: touch; /* For smooth scrolling on mobile */
+             /* Hide scrollbar for different browsers */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+        .scrollable-slider::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, and Opera */
+        }
+        .scrollable-slider.active {
+            cursor: grabbing;
+        }
+
+        /* Destination slider track (manual scroll) */
+        .destination-slider-track {
+            display: flex;
+        }
+        .destination-card {
+             width: 22rem; /* w-88 */
+             flex-shrink: 0;
+             padding: 0 1rem; /* Equivalent to mx-4 */
+        }
+
+        /* Testimonial slider animation (auto-scroll) */
+        .testimonial-slider {
+             overflow: hidden;
+        }
+        .testimonial-slider-track {
+            display: flex;
+            width: calc(350px * 6); /* Card width * 6 cards (3 original + 3 duplicates) */
+            animation: testimonialScroll 35s linear infinite;
+        }
+
+        .slider:hover .testimonial-slider-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes testimonialScroll {
+            from { transform: translateX(0); }
+            to {
+                transform: translateX(calc(-350px * 3)); /* Move by the width of the 3 original cards */
+            }
+        }
+        .testimonial-card-wrapper {
+            width: 350px;
+            flex-shrink: 0;
+            padding: 0 1rem; /* Creates space between cards */
+        }
+
+        /* Navbar link hover effect */
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background-color: #0ea5e9; /* sky-500 */
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        /* Style for the underline when the navbar is transparent */
+        header.transparent .nav-link:hover::after {
+            background-color: #fff;
+        }
+
+        /* Animated Hamburger Icon */
+        #hamburger-icon.open .hamburger-line:nth-child(1) {
+            transform: translateY(3.5px) rotate(45deg);
+        }
+        #hamburger-icon.open .hamburger-line:nth-child(2) {
+            transform: translateY(-3.5px) rotate(-45deg);
+        }
+
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Header -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 transparent">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" id="brand-logo" class="text-3xl font-bold text-white transition-colors duration-300">WanderSphere</a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#destinations" class="nav-link nav-link-color text-white">Destinations</a>
+                <a href="#packages" class="nav-link nav-link-color text-white">Packages</a>
+                <a href="#guides" class="nav-link nav-link-color text-white">Guides</a>
+                <a href="#" class="nav-link nav-link-color text-white">About</a>
+            </nav>
+            <div class="hidden md:flex items-center space-x-2">
+                <a href="#" id="login-btn" class="text-white px-5 py-2 rounded-full hover:bg-white/20 transition-all duration-300">Login</a>
+                <a href="#" id="signup-btn" class="bg-white/20 border border-white/50 text-white px-5 py-2 rounded-full hover:bg-white hover:text-sky-500 transition-all duration-300 shadow-sm hover:shadow-md">Sign Up</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden p-2 relative z-50">
+                <div id="hamburger-icon" class="space-y-1.5">
+                    <span class="hamburger-line block w-6 h-0.5 bg-white transition-all duration-300"></span>
+                    <span class="hamburger-line block w-6 h-0.5 bg-white transition-all duration-300"></span>
+                </div>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white px-6 pb-4">
+            <a href="#destinations" class="block py-2 text-gray-600 hover:text-sky-500">Destinations</a>
+            <a href="#packages" class="block py-2 text-gray-600 hover:text-sky-500">Packages</a>
+            <a href="#guides" class="block py-2 text-gray-600 hover:text-sky-500">Guides</a>
+            <a href="#" class="block py-2 text-gray-600 hover:text-sky-500">About</a>
+            <div class="border-t border-gray-200 mt-4 pt-4">
+                <a href="#" class="block py-2 text-gray-600 hover:text-sky-500">Login</a>
+                <a href="#" class="block mt-2 bg-orange-500 text-white text-center px-6 py-2 rounded-full hover:bg-orange-600">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section h-screen flex items-center justify-center text-white">
+        <div class="bg-black/50 absolute inset-0"></div>
+        <div class="text-center z-10 px-4">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 leading-tight">Discover Your Next Adventure</h1>
+            <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto">Explore the world's most breathtaking destinations and create memories that will last a lifetime.</p>
+            <a href="#search" class="bg-sky-500 text-white px-10 py-4 rounded-full text-lg font-semibold hover:bg-sky-600 transition duration-300 transform hover:scale-105">Explore Now</a>
+        </div>
+    </section>
+
+    <!-- Search Bar Section -->
+    <section id="search" class="bg-gray-100 py-12 md:-mt-16 relative z-20">
+        <div class="container mx-auto px-6">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
+                    <div class="w-full">
+                        <label for="destination" class="block text-sm font-medium text-gray-700 mb-2">Destination</label>
+                        <input type="text" id="destination" placeholder="e.g., Paris, France" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500">
+                    </div>
+                    <div class="w-full">
+                        <label for="date" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                        <input type="date" id="date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500">
+                    </div>
+                    <div class="w-full">
+                        <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">Budget</label>
+                        <select id="budget" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500">
+                            <option>$1,000 - $2,000</option>
+                            <option>$2,000 - $5,000</option>
+                            <option>$5,000+</option>
+                        </select>
+                    </div>
+                    <div class="w-full">
+                        <label for="trip-type" class="block text-sm font-medium text-gray-700 mb-2">Type of Trip</label>
+                        <select id="trip-type" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500">
+                            <option>Adventure</option>
+                            <option>Relaxation</option>
+                            <option>Cultural</option>
+                            <option>Luxury</option>
+                        </select>
+                    </div>
+                    <button class="w-full bg-orange-500 text-white p-3 rounded-lg text-lg font-semibold hover:bg-orange-600 transition duration-300">Search</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Destinations Section -->
+    <section id="destinations" class="py-20">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4 px-6">Top Destinations</h2>
+            <p class="text-center text-gray-600 mb-12 px-6">Handpicked destinations by our travel experts.</p>
+            <div id="destinations-slider" class="slider scrollable-slider">
+                <div class="destination-slider-track">
+                    <!-- Cards for manual scroll -->
+                    <div class="destination-card">
+                        <div class="relative rounded-xl overflow-hidden shadow-lg">
+                            <img src="https://images.pexels.com/photos/5439923/pexels-photo-5439923.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Italy" class="w-full h-80 object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <h3 class="absolute bottom-6 left-6 text-white text-2xl font-bold">Amalfi Coast, Italy</h3>
+                        </div>
+                    </div>
+                    <div class="destination-card">
+                        <div class="relative rounded-xl overflow-hidden shadow-lg">
+                            <img src="https://images.pexels.com/photos/1850619/pexels-photo-1850619.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Paris" class="w-full h-80 object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <h3 class="absolute bottom-6 left-6 text-white text-2xl font-bold">Paris, France</h3>
+                        </div>
+                    </div>
+                    <div class="destination-card">
+                        <div class="relative rounded-xl overflow-hidden shadow-lg">
+                            <img src="https://images.pexels.com/photos/2506923/pexels-photo-2506923.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Kyoto" class="w-full h-80 object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <h3 class="absolute bottom-6 left-6 text-white text-2xl font-bold">Kyoto, Japan</h3>
+                        </div>
+                    </div>
+                    <div class="destination-card">
+                        <div class="relative rounded-xl overflow-hidden shadow-lg">
+                            <img src="https://i.pinimg.com/originals/f2/4f/60/f24f60e806929174d57e6b68b134131f.jpg" alt="Bora Bora" class="w-full h-80 object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <h3 class="absolute bottom-6 left-6 text-white text-2xl font-bold">Bora Bora, French Polynesia</h3>
+                        </div>
+                    </div>
+                     <div class="destination-card">
+                        <div class="relative rounded-xl overflow-hidden shadow-lg">
+                            <img src="https://img.fotocommunity.com/pragser-wildsee-da04dee0-3777-4c21-a2dc-fbc2709422a0.jpg?height=1080" alt="Pragser Wildsee" class="w-full h-80 object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <h3 class="absolute bottom-6 left-6 text-white text-2xl font-bold">Pragser Wildsee, Italy</h3>
+                        </div>
+                    </div>
+                     <div class="destination-card">
+                        <div class="relative rounded-xl overflow-hidden shadow-lg">
+                            <img src="https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bali" class="w-full h-80 object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <h3 class="absolute bottom-6 left-6 text-white text-2xl font-bold">Bali, Indonesia</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Travel Packages Section -->
+    <section id="packages" class="bg-sky-50 py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-4">Travel Packages</h2>
+            <p class="text-center text-gray-600 mb-12">Curated packages for every type of traveler.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-sky-500 text-5xl mb-4"><i class="fas fa-user"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Solo Trips</h3>
+                    <p class="text-gray-600">Explore the world on your own terms.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-sky-500 text-5xl mb-4"><i class="fas fa-users"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Family Getaways</h3>
+                    <p class="text-gray-600">Create unforgettable family memories.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-sky-500 text-5xl mb-4"><i class="fas fa-heart"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Couples Retreat</h3>
+                    <p class="text-gray-600">Romantic escapes for two.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-sky-500 text-5xl mb-4"><i class="fas fa-gem"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Luxury Stays</h3>
+                    <p class="text-gray-600">Indulge in the finest experiences.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-20">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4 px-6">What Our Travelers Say</h2>
+            <p class="text-center text-gray-600 mb-12 px-6">Real stories from our happy customers.</p>
+            <div class="slider testimonial-slider">
+                <div class="testimonial-slider-track">
+                    <!-- Original Testimonial Cards -->
+                    <div class="testimonial-card-wrapper">
+                        <div class="testimonial-card bg-white p-8 rounded-xl shadow-lg border border-gray-100 h-full">
+                            <p class="text-gray-600 mb-6">"WanderSphere made planning my dream vacation to Italy a breeze. The itinerary was perfect, and every detail was taken care of. Highly recommended!"</p>
+                            <div class="flex items-center">
+                                <img src="https://i.pravatar.cc/150?img=1" alt="User 1" class="w-12 h-12 rounded-full mr-4">
+                                <div>
+                                    <p class="font-bold">Sarah L.</p>
+                                    <p class="text-sm text-gray-500">Traveled to Italy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card-wrapper">
+                        <div class="testimonial-card bg-white p-8 rounded-xl shadow-lg border border-gray-100 h-full">
+                            <p class="text-gray-600 mb-6">"Our family trip to Japan was incredible, thanks to WanderSphere. The cultural experiences they arranged were authentic and memorable."</p>
+                            <div class="flex items-center">
+                                <img src="https://i.pravatar.cc/150?img=2" alt="User 2" class="w-12 h-12 rounded-full mr-4">
+                                <div>
+                                    <p class="font-bold">Mark T.</p>
+                                    <p class="text-sm text-gray-500">Traveled to Japan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card-wrapper">
+                        <div class="testimonial-card bg-white p-8 rounded-xl shadow-lg border border-gray-100 h-full">
+                            <p class="text-gray-600 mb-6">"The luxury package to Bora Bora was worth every penny. It was the most relaxing and beautiful trip of my life. The service was impeccable."</p>
+                            <div class="flex items-center">
+                                <img src="https://i.pravatar.cc/150?img=3" alt="User 3" class="w-12 h-12 rounded-full mr-4">
+                                <div>
+                                    <p class="font-bold">Jessica P.</p>
+                                    <p class="text-sm text-gray-500">Traveled to Bora Bora</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Duplicated Testimonial Cards -->
+                    <div class="testimonial-card-wrapper">
+                        <div class="testimonial-card bg-white p-8 rounded-xl shadow-lg border border-gray-100 h-full">
+                            <p class="text-gray-600 mb-6">"WanderSphere made planning my dream vacation to Italy a breeze. The itinerary was perfect, and every detail was taken care of. Highly recommended!"</p>
+                            <div class="flex items-center">
+                                <img src="https://i.pravatar.cc/150?img=1" alt="User 1" class="w-12 h-12 rounded-full mr-4">
+                                <div>
+                                    <p class="font-bold">Sarah L.</p>
+                                    <p class="text-sm text-gray-500">Traveled to Italy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card-wrapper">
+                        <div class="testimonial-card bg-white p-8 rounded-xl shadow-lg border border-gray-100 h-full">
+                            <p class="text-gray-600 mb-6">"Our family trip to Japan was incredible, thanks to WanderSphere. The cultural experiences they arranged were authentic and memorable."</p>
+                            <div class="flex items-center">
+                                <img src="https://i.pravatar.cc/150?img=2" alt="User 2" class="w-12 h-12 rounded-full mr-4">
+                                <div>
+                                    <p class="font-bold">Mark T.</p>
+                                    <p class="text-sm text-gray-500">Traveled to Japan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card-wrapper">
+                        <div class="testimonial-card bg-white p-8 rounded-xl shadow-lg border border-gray-100 h-full">
+                            <p class="text-gray-600 mb-6">"The luxury package to Bora Bora was worth every penny. It was the most relaxing and beautiful trip of my life. The service was impeccable."</p>
+                            <div class="flex items-center">
+                                <img src="https://i.pravatar.cc/150?img=3" alt="User 3" class="w-12 h-12 rounded-full mr-4">
+                                <div>
+                                    <p class="font-bold">Jessica P.</p>
+                                    <p class="text-sm text-gray-500">Traveled to Bora Bora</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guides Section -->
+    <section id="guides" class="bg-gray-100 py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-4">Travel Guides & Tips</h2>
+            <p class="text-center text-gray-600 mb-12">Get inspired for your next journey.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=1935&auto=format&fit=crop" alt="Travel Tips" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">10 Essential Travel Hacks for 2025</h3>
+                        <p class="text-gray-600 mb-4">Pack smarter, save money, and travel like a pro with these tips.</p>
+                        <a href="#" class="text-sky-500 font-semibold hover:text-sky-600">Read More &rarr;</a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1981&auto=format&fit=crop" alt="Food Guide" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">A Food Lover's Guide to Southeast Asia</h3>
+                        <p class="text-gray-600 mb-4">Discover the best street food and culinary delights.</p>
+                        <a href="#" class="text-sky-500 font-semibold hover:text-sky-600">Read More &rarr;</a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <img src="https://images.unsplash.com/photo-1569949381669-ecf31ae8e613?q=80&w=1995&auto=format&fit=crop" alt="Adventure Travel" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Top 5 Adventure Travel Destinations</h3>
+                        <p class="text-gray-600 mb-4">For the thrill-seekers and adrenaline junkies.</p>
+                        <a href="#" class="text-sky-500 font-semibold hover:text-sky-600">Read More &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-16">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">WanderSphere</h3>
+                    <p class="text-gray-400">Your journey begins here. Explore, dream, discover.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Quick Links</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li class="mb-2"><a href="#destinations" class="text-gray-400 hover:text-white">Destinations</a></li>
+                        <li class="mb-2"><a href="#packages" class="text-gray-400 hover:text-white">Packages</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Support</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Newsletter</h4>
+                    <p class="text-gray-400 mb-4">Subscribe for travel tips and deals.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" class="w-full p-3 rounded-l-lg text-gray-800 focus:outline-none">
+                        <button class="bg-orange-500 p-3 rounded-r-lg hover:bg-orange-600"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 WanderSphere. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            hamburgerIcon.classList.toggle('open');
+        });
+
+        // Navbar scroll effect
+        const header = document.getElementById('header');
+        const brandLogo = document.getElementById('brand-logo');
+        const navLinks = document.querySelectorAll('.nav-link-color');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const hamburgerLines = document.querySelectorAll('.hamburger-line');
+
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.remove('transparent');
+                header.classList.add('bg-white/90', 'backdrop-blur-lg', 'shadow-sm');
+                brandLogo.classList.remove('text-white');
+                brandLogo.classList.add('text-sky-600');
+                navLinks.forEach(link => {
+                    link.classList.remove('text-white');
+                    link.classList.add('text-gray-600');
+                });
+                loginBtn.classList.remove('text-white', 'hover:bg-white/20');
+                loginBtn.classList.add('text-gray-600', 'hover:bg-gray-100');
+                signupBtn.classList.remove('text-white', 'bg-white/20', 'border-white/50');
+                signupBtn.classList.add('text-white', 'bg-orange-500', 'border-transparent');
+                signupBtn.classList.add('hover:text-white', 'hover:bg-orange-600');
+                hamburgerLines.forEach(line => {
+                    line.classList.remove('bg-white');
+                    line.classList.add('bg-gray-700');
+                });
+            } else {
+                header.classList.add('transparent');
+                header.classList.remove('bg-white/90', 'backdrop-blur-lg', 'shadow-sm');
+                brandLogo.classList.add('text-white');
+                brandLogo.classList.remove('text-sky-600');
+                navLinks.forEach(link => {
+                    link.classList.add('text-white');
+                    link.classList.remove('text-gray-600');
+                });
+                loginBtn.classList.add('text-white', 'hover:bg-white/20');
+                loginBtn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+                signupBtn.classList.add('text-white', 'bg-white/20', 'border-white/50');
+                signupBtn.classList.remove('text-white', 'bg-orange-500', 'border-transparent');
+                signupBtn.classList.remove('hover:text-white', 'hover:bg-orange-600');
+                hamburgerLines.forEach(line => {
+                    line.classList.add('bg-white');
+                    line.classList.remove('bg-gray-700');
+                });
+            }
+        });
+
+
+        // Combined Auto-scroll and Drag-to-scroll for Destinations Slider
+        const slider = document.querySelector('#destinations-slider');
+        if (slider) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            let targetScrollLeft;
+            let isDragging = false;
+
+            // Auto-scroll functionality
+            let autoScrollAF;
+            const startAutoScroll = () => {
+                cancelAnimationFrame(autoScrollAF); // Prevent multiple loops
+                function scrollStep() {
+                    if (slider.scrollLeft >= slider.scrollWidth - slider.clientWidth - 1) {
+                        slider.scrollLeft = 0;
+                    } else {
+                        slider.scrollLeft += 0.75; // Control auto-scroll speed
+                    }
+                    autoScrollAF = requestAnimationFrame(scrollStep);
+                }
+                autoScrollAF = requestAnimationFrame(scrollStep);
+            };
+
+            const stopAutoScroll = () => {
+                cancelAnimationFrame(autoScrollAF);
+            };
+
+            // Manual drag event listeners
+            slider.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                isDown = true;
+                isDragging = false;
+                stopAutoScroll();
+                slider.classList.add('active');
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+                targetScrollLeft = scrollLeft;
+            });
+            
+            slider.addEventListener('mouseenter', stopAutoScroll);
+
+            slider.addEventListener('mouseleave', () => {
+                isDown = false;
+                slider.classList.remove('active');
+                startAutoScroll();
+            });
+
+            slider.addEventListener('mouseup', () => {
+                isDown = false;
+                slider.classList.remove('active');
+            });
+
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                isDragging = true;
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX);
+                targetScrollLeft = scrollLeft - walk;
+            });
+
+            // Smoothing animation loop
+            function smoothScrollLoop() {
+                // Only apply smoothing if the user is actively dragging
+                if (isDown && isDragging) {
+                    // Use linear interpolation (lerp) for a smooth effect
+                    // The 0.1 determines the "smoothness". Lower is smoother.
+                    slider.scrollLeft += (targetScrollLeft - slider.scrollLeft) * 0.1;
+                }
+                requestAnimationFrame(smoothScrollLoop);
+            }
+            
+            // Start all the processes
+            smoothScrollLoop();
+            startAutoScroll();
+        }
+    </script>
+</body>
+</html>
